@@ -15,7 +15,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
 /** @var JDocumentHtml $this */
-
+// here we go
 $app  = Factory::getApplication();
 $lang = Factory::getLanguage();
 

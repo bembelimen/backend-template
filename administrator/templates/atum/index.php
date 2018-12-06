@@ -20,7 +20,8 @@ $app   = Factory::getApplication();
 $lang  = $app->getLanguage();
 $input = $app->input;
 $wa    = $this->getWebAssetManager();
-
+// Nadja legt los
+// mit einem neuen zweig
 // Detecting Active Variables
 $option      = $input->get('option', '');
 $view        = $input->get('view', '');

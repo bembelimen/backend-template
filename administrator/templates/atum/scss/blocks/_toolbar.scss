@@ -1,16 +1,15 @@
-// Toolbar
-
 .subhead {
   position: sticky;
   top: 0;
   right: 0;
   left: 0;
-  z-index: 1040;
+  z-index: $zindex-toolbar;
   width: auto;
   min-height: 43px;
   padding: 13px 0;
-  color: #0c192e;
-  background: var(--main-bg);
+  color: var(--atum-text-dark); //#0c192e;
+  background: var(--toolbar-bg);
+  border-bottom: 1px solid $gray-400;
 
   .row {
     margin-right: 0;
@@ -22,60 +21,45 @@
 
     > * {
       margin-left: .75rem;
-      box-shadow: $atum-box-shadow;
 
       &:first-child {
         margin-left: 0;
       }
+
+      &.ml-auto {
+        @include media-breakpoint-down(md) {
+         /* margin-right: auto !important;
+          margin-left: .75rem !important;*/
+        }
+      }
     }
   }
 
-  .btn {
-    padding: 0 22px;
-    font-size: 1rem;
-    line-height: $atum-toolbar-line-height;
+}
 
-    [class^='icon-'],
-    [class*=' icon-'],
-    [class^='#{$fa-css-prefix}-'],
-    [class*=' #{$fa-css-prefix}-'] {
-      z-index: -1;
-      display: inline-block;
-      width: 38px;
-      height: auto;
-      margin: 0 16px 0 -22px;
-      line-height: $atum-toolbar-line-height;
-      color: var(--white);
-      background-color: rgba(0, 0, 0, .2);
+.btn-toolbar{
+
+  .input-group-append {
+    .btn-primary {
+      background-color: darken(theme-color("atum-bg-dark"), 5%);
+      color:rgba(255,255,255,0.90);
     }
-
-    &[disabled],
-    &.dropdown-toggle[disabled] {
-      background-color: $gray-600;
-      border-color: $gray-600;
+  }
+  >*{
+    @include media-breakpoint-down(md) {
+      margin-left:0 !important;
+      margin-right:0.75rem;
+      margin-bottom:0.75rem;
     }
   }
 
-  .dropdown-toggle {
+}
 
-    &.btn {
-      background-color: rgba(0, 0, 0, .2);
-    }
-
-    &.btn-primary {
-      background-color: darken(theme-color("primary"), 8%);
-    }
-
-    &.btn-success {
-      background-color: darken(theme-color("success"), 8%);
-    }
-
-    &.btn-info {
-      background-color: darken(theme-color("info"), 8%);
-    }
-
-    &.btn-danger {
-      background-color: darken(theme-color("danger"), 8%);
-    }
+.js-stools{
+  @include media-breakpoint-down(md) {
+    justify-content:flex-start;
+  }
+  @include media-breakpoint-down(xs) {
+    display:block;
   }
 }

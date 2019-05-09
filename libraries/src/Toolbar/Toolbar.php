@@ -13,6 +13,7 @@ defined('JPATH_PLATFORM') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Toolbar\Button\BasicButton;
 use Joomla\CMS\Toolbar\Button\ConfirmButton;
@@ -84,6 +85,15 @@ class Toolbar
 	protected $factory;
 
 	/**
+	 * Breadcrumbs array
+	 *
+	 * @var    array
+	 * @since  4.0.0
+	 */
+	protected $breadcrumbs = [];
+
+
+	/**
 	 * Constructor
 	 *
 	 * @param   string                   $name     The toolbar name.
@@ -116,6 +126,15 @@ class Toolbar
 
 		// Set base path to find buttons.
 		$this->_buttonPath[] = __DIR__ . '/Button';
+
+		// Load the mod_menu language file for the breadcrumbs
+		$app      = Factory::getApplication();
+		$language = $app->getLanguage();
+		$language->load('mod_menu');
+
+		// Get the breadcrumb items
+		/** @var \Joomla\CMS\Pathway\AdministratorPathway $pathway */
+		$this->breadcrumbs['breadcrumbs'] = $app->getPathway()->getPathWay();
 	}
 
 	/**
@@ -303,15 +322,32 @@ class Toolbar
 		{
 			if ($button instanceof ToolbarButton)
 			{
-				// Child dropdown only support new syntax
-				$button->setOption('is_child', $isChild);
+				switch (strtolower($button->getName()))
+				{
+					// Special buttons shown on the breadcrumb bar
+					case 'options':
+					case 'help':
+						$this->breadcrumbs['buttons'][] = $button->render();
+						break;
+					default:
+						// Child dropdown only support new syntax
+						$button->setOption('is_child', $isChild);
 
-				$html[] = $button->render();
+						$html[] = $button->render();
+						break;
+				}
 			}
 			// B/C
 			else
 			{
-				$html[] = $this->renderButton($button);
+				if (preg_grep("/options|help/i", $button))
+				{
+					$this->breadcrumbs['buttons'][] = $this->renderButton($button);
+				}
+				else
+				{
+					$html[] = $this->renderButton($button);
+				}
 			}
 		}
 
@@ -321,6 +357,11 @@ class Toolbar
 			$layout = new FileLayout('joomla.toolbar.containerclose');
 
 			$html[] = $layout->render([]);
+		}
+
+		if (strtolower($this->getName()) === 'toolbar' && Factory::getApplication()->input->get('layout') !== 'edit')
+		{
+			array_unshift($html, LayoutHelper::render('joomla.toolbar.breadcrumb', ['items' => $this->breadcrumbs]));
 		}
 
 		return implode('', $html);
